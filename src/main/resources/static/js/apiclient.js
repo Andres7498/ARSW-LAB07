@@ -34,9 +34,9 @@ apiclient = (function (){
            }); callback(null,bpname,bpname);
            },
     };
-    var deleteBlueprints = function(author,callback){
+    var deleteBlueprints = function(author,blueprints,callback){
             var promise = $.ajax({
-               type: "GET",
+               type: "DELETE",
                url: "blueprints/"+author,
                contentType: "application/json; charset=utf-8",
                dataType: "json",

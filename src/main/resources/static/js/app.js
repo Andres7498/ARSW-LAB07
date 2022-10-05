@@ -97,10 +97,7 @@ var modulo = (function () {
             if (author === "") {
                 alert("Nombre de Autor Vacio");
             } else {
-                apiclient.getBlueprintsByAuthor(author, (req, resp) => {
-                    llenarTabla(resp);
-
-
+                apiclient.deleteBlueprints( author,  bpname, callback) {
         }
 
     };
@@ -108,7 +105,8 @@ var modulo = (function () {
     return {
         getBlueprintsByNameAndAuthor: getBlueprintsByNameAndAuthor,
         getBlueprintsByAuthor: getBlueprintsByAuthor,
-        guardar: guardar
+        guardar: guardar,
+        deleteBlueprint: deleteBlueprint
     };
 
 })();
