@@ -72,21 +72,11 @@ public class BlueprintAPIController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = "application/json", value = "/planos")
-    public ResponseEntity<?> getBlueprintPost(@RequestBody JSONObject blueprintJson) {
+    @RequestMapping(method = RequestMethod.POST, consumes = "application/json", value = "/blueprints/{author}/{bpname}/{planos}")
+    public ResponseEntity<?> getBlueprintPost(@PathVariable String author, @PathVariable String bpname, @PathVariable String planos) {
         try {
-            Blueprint blueprint = new Blueprint(blueprintJson.get("Author").toString(), blueprintJson.get("Name").toString());
-            String[] listPoints = blueprintJson.get("Points").toString().split("-");
-            for (String pointStr : listPoints) {
-                List<String> point = Arrays.asList(pointStr.split(","));
-                String corX = point.get(0).substring(2);
-                String corY = point.get(1).substring(2, point.get(0).length());
-                Point po = new Point(Integer.parseInt(corX), Integer.parseInt(corY));
-                blueprint.addPoint(po);
-            }
-
-            bPServices.addNewBlueprint(blueprint);
-
+            Blueprint bp=new Blueprint(author, bpname,convertStringtoObject(planos));
+            bPServices.addNewBlueprint(bp);
         } catch (BlueprintPersistenceException ex) {
             Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>("Error al ingresar blueprint con post", HttpStatus.FORBIDDEN);
@@ -121,6 +111,15 @@ public class BlueprintAPIController {
         }
         return new ResponseEntity<>(new Gson().toJson(jsonString), HttpStatus.CREATED);
     }
+    @RequestMapping(method = RequestMethod.DELETE, consumes = "application/json", value = "/blueprints/{bpname}/{author}")
+    public ResponseEntity<?> getBlueprintPost(@PathVariable String bpname, @PathVariable String author) {
+        try {
+            bPServices.deleteBlueprint(author, bpname);
+        } catch (BlueprintNotFoundException e) {
+            return new ResponseEntity<>("Error al borrar blueprint con delete", HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(HttpStatus.CREATED.getReasonPhrase(), HttpStatus.CREATED);
+    }
 
     private String crearJsonString(Set<Blueprint> blueprints) {
         List<Blueprint> blueprintList = new ArrayList<>(blueprints);
@@ -135,5 +134,28 @@ public class BlueprintAPIController {
         blueprintsString = blueprintsString.substring(0, blueprintsString.length() - 1);
         blueprintsString += "]";
         return blueprintsString;
+    }
+    private Point[] convertStringtoObject(String points){
+        String[] strArray = points.split(":");
+        Point[] pts1=new Point[strArray.length/2];
+        int index  = 0;
+        for (int i = 1; i< strArray.length; i+=2){
+            Point point = null;
+            try{
+                int x = Integer.parseInt(strArray[i].replace("}","").replace(",","").replace("'y'","").replace("{","").replace("'x'",""));
+                int y = 0 ;
+                if (i==strArray.length-2) {
+                    String s = strArray[i + 1].replace("}", "").replace(",", "").replace("'y'", "").replace("{", "").replace("'x'", "");
+                    s = s.substring(0, s.length() - 1);
+                    y = Integer.parseInt(s);
+                }else{y = Integer.parseInt(strArray[i + 1].replace("}", "").replace(",", "").replace("'y'", "").replace("{", "").replace("'x'", ""));}
+                point = new Point(x,y);
+            }
+            catch (NumberFormatException ex){
+                point = new Point(0,0);
+            }pts1[index] = point;
+            index++;
+        }
+        return pts1;
     }
 }

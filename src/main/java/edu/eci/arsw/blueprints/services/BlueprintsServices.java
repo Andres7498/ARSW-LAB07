@@ -61,6 +61,15 @@ public class BlueprintsServices {
             System.out.println("Blueprint not found");
             return null;
         }
+
     }
-    
+    public void deleteBlueprint(String author, String bpname)  throws BlueprintNotFoundException{
+        try {
+            bpp.deleteBlueprint(author, bpname);
+        }catch (Exception e){
+            System.out.println("Blueprint not found");
+        }
+
+    }
+
 }

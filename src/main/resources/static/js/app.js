@@ -83,10 +83,32 @@ var modulo = (function () {
             const totalPuntos = datanew.reduce((suma, {puntos}) => suma + puntos, 0);
             $("#user-points").text(totalPuntos);
         }
+        }
+        var guardar = function () {
+            autor = document.getElementsByTagName('blueprint');
+            try (author != "") {
+                apiclient.addBlueprint (points,author,bpname,callback);
+            } catch {
+                console.log("El author no puede ser nulo");
+            }
+
+        var deleteBlueprint = function (){
+            author = $("#blueprint").val();
+            if (author === "") {
+                alert("Nombre de Autor Vacio");
+            } else {
+                apiclient.getBlueprintsByAuthor(author, (req, resp) => {
+                    llenarTabla(resp);
+
+
+        }
+
     };
 
     return {
         getBlueprintsByNameAndAuthor: getBlueprintsByNameAndAuthor,
-        getBlueprintsByAuthor: getBlueprintsByAuthor
+        getBlueprintsByAuthor: getBlueprintsByAuthor,
+        guardar: guardar
     };
+
 })();
