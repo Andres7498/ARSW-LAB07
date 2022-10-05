@@ -84,24 +84,24 @@ var modulo = (function () {
             $("#user-points").text(totalPuntos);
         }
         }
-        var guardar = function () {
-            autor = document.getElementsByTagName('blueprint');
-            try (author != "") {
-                apiclient.addBlueprint (points,author,bpname,callback);
-            } catch {
-                console.log("El author no puede ser nulo");
-            }
-
-        var deleteBlueprint = function (){
-            author = $("#blueprint").val();
-            if (author === "") {
-                alert("Nombre de Autor Vacio");
-            } else {
-                apiclient.deleteBlueprints( author,  bpname, callback) {
+    var guardar = function () {
+        author = document.getElementsByTagName('blueprint');
+        if (author != "") {
+            apiclient.addBlueprint (points,author,bpname,(req, resp) =>{
+            });
+        } else {
+            console.log("El author no puede ser nulo");
         }
-
     };
-
+    var deleteBlueprint = function (){
+        author = $("#blueprint").val();
+        if (author === "") {
+            alert("Nombre de Autor Vacio");
+        } else {
+            apiclient.deleteBlueprint(author,bpname, (req, resp) => {
+            });
+        }
+    };
     return {
         getBlueprintsByNameAndAuthor: getBlueprintsByNameAndAuthor,
         getBlueprintsByAuthor: getBlueprintsByAuthor,

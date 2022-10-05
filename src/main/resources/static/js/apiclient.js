@@ -23,16 +23,18 @@ apiclient = (function (){
            success : function (data){
                callback(null,data);
            }
-        });
-    addBlueprint:function(points,author,bpname,callback){
+
+        })
+    };
+    var addBlueprint = function(points,author,bpname,callback){
            console.log(points);
            const put_request = $.ajax({
-               url: "/blueprints/{author}/{bpname}/planos"
+               url: "/blueprints/{author}/{bpname}/planos",
                type: "POST",
                data: '{"points":'+JSON.stringify(points)+',"bpname":'+bpname+',"author":'+author+'}',
                contentType: "application/json",
            }); callback(null,bpname,bpname);
-           },
+
     };
     var deleteBlueprints = function(author,blueprints,callback){
             var promise = $.ajax({
@@ -44,12 +46,14 @@ apiclient = (function (){
                success : function (data){
                    callback(null,data);
                }
-            });
+            })
+    };
 
     return{
         getBlueprintsByAuthor: getBlueprintsByAuthor,
-        getBlueprintsByNameAndAuthor: getBlueprintsByNameAndAuthor
-        
+        getBlueprintsByNameAndAuthor: getBlueprintsByNameAndAuthor,
+        addBlueprint: addBlueprint,
+        deleteBlueprints: deleteBlueprints
     };
 
 
